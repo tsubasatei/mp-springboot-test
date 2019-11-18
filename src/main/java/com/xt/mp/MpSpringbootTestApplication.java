@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @MapperScan ：扫描 mapper 包下的 Mapper 接口
  */
-@MapperScan("com.xt.mp.mapper")
+@MapperScan({"com.xt.mp.mapper", "com.xt.mp.auto.employee.mapper"})
 @SpringBootApplication
 public class MpSpringbootTestApplication {
 
