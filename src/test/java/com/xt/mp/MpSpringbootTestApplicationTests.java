@@ -1,5 +1,7 @@
 package com.xt.mp;
 
+import com.baomidou.mybatisplus.core.conditions.query.Query;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xt.mp.bean.Employee;
@@ -18,6 +20,81 @@ class MpSpringbootTestApplicationTests {
 
     @Autowired
     private EmployeeMapper employeeMapper;
+
+    /**
+     * 条件构造器 删除操作
+     */
+    @Test
+    public void testQueryWrapperDelete () {
+        employeeMapper.delete(new QueryWrapper<Employee>()
+                .eq("last_name", "Jerry")
+                .eq("age", 30));
+    }
+
+    /**
+     * 条件构造器 修改操作
+     */
+    @Test
+    public void testQueryWrapperUpdate () {
+        Employee employee = new Employee();
+        employee.setLastName("Jerry");
+        employee.setEmail("jerry@163.com");
+        employee.setGender("0");
+        employeeMapper.update(employee,
+                new QueryWrapper<Employee>()
+                        .eq("last_name", "Jerry")
+                        .eq("age", 30));
+    }
+
+    /**
+     * 条件构造器 查询操作
+     */
+    @Test
+    public void testQueryWrapperSelect () {
+        // 分页查询 tbl_employee 表中，年龄在18~50之间且性别为男且姓名为 Tom 的所有用户
+        IPage<Employee> employeeIPage = employeeMapper.selectPage(new Page<>(1, 2),
+                new QueryWrapper<Employee>()
+                        .between("age", 18, 50)
+                        .eq("gender", "1")
+                        .eq("last_name", "Tom"));
+        employeeIPage.getRecords().forEach(System.out::println);
+
+        System.out.println("==============");
+
+        // 查询 tbl_employee 表中，性别为女并且名字中带有“老师” 或者邮箱中带有“a”
+
+        QueryWrapper<Employee> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda()
+                .eq(Employee::getGender, "0")
+                .like(Employee::getLastName, "老师")
+                .or()
+                .like(Employee::getEmail, "a");
+
+        List<Employee> employees = employeeMapper.selectList(queryWrapper);
+        employees.forEach(System.out::println);
+
+/*
+
+        List<Employee> employees = employeeMapper.selectList(new QueryWrapper<Employee>()
+                .eq("gender", "0")
+                .like("last_name", "老师")
+//                .or()       // gender = ? AND last_name LIKE ? OR email LIKE ?
+                .or(employeeQueryWrapper -> employeeQueryWrapper.like("email", "a")));  // gender = ? AND last_name LIKE ? OR ( (email LIKE ?) )
+
+        employees.forEach(System.out::println);
+*/
+
+        System.out.println("==============");
+
+        // 查询性别为女的，根据 age 进行排序（asc/desc），简单分页
+        List<Employee> employees2 = employeeMapper.selectList(new QueryWrapper<Employee>()
+                        .eq("gender", "0")
+                        .orderByDesc("age")
+                        .last("limit 1, 3")
+        );
+        employees2.forEach(System.out::println);
+    }
+
 
     @Test
     public void testDelete () {
