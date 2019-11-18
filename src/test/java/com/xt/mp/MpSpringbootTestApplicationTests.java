@@ -1,6 +1,5 @@
 package com.xt.mp;
 
-import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -21,6 +20,95 @@ class MpSpringbootTestApplicationTests {
     @Autowired
     private EmployeeMapper employeeMapper;
 
+
+    /**
+     * AR  分页复杂操作
+     */
+    @Test
+    public void  testARPage() {
+        Employee employee = new Employee();
+        IPage<Employee> employeeIPage = employee.selectPage(new Page<>(1, 2),
+                new QueryWrapper<Employee>().like("last_name", "e"));
+        employeeIPage.getRecords().forEach(System.out::println);
+    }
+
+    /**
+     * AR 删除操作
+     *
+     * 注意: 删除不存在的数据 逻辑上也是属于成功的.
+     */
+    @Test
+    public void testARDelete() {
+        Employee employee = new Employee();
+//        boolean result = employee.deleteById(20);
+
+//        employee.setId(17);
+//        boolean result = employee.deleteById();
+//        System.out.println("result: " + result);
+
+        // like 不区分大小写
+        boolean result = employee.delete(new QueryWrapper<Employee>().like("last_name", "sanae"));
+        System.out.println("result: " + result);
+
+    }
+
+    /**
+     * AR 查询操作
+     */
+    @Test
+    public void testARSelect () {
+        Employee employee = new Employee();
+//        Employee emp = employee.selectById(20);
+
+        employee.setId(22);
+        Employee emp = employee.selectById();
+        System.out.println(emp);
+
+        System.out.println("===========");
+
+        List<Employee> employees = employee.selectAll();
+        employees.forEach(System.out::println);
+
+        System.out.println("===========");
+        List<Employee> list = employee.selectList(new QueryWrapper<Employee>().like("last_name", "e"));
+        list.forEach(System.out::println);
+
+        System.out.println("==========");
+
+        int count = employee.selectCount(new QueryWrapper<Employee>().eq("gender", 0));
+        System.out.println("count: " + count);
+    }
+
+    /**
+     * AR  修改操作
+     */
+    @Test
+    public void testARUpdate () {
+        Employee employee = new Employee();
+        employee.setId(22);
+        employee.setLastName("Sanae2");
+        employee.setEmail("sanae2@163.com");
+        employee.setGender("1");
+        employee.setAge(30);
+        boolean result = employee.updateById();
+        System.out.println("result: " + result);
+    }
+
+
+    /**
+     * AR  插入操作
+     */
+    @Test
+    public void testARInsert () {
+        Employee employee = new Employee();
+        employee.setLastName("Sanae");
+        employee.setEmail("sanae@163.com");
+        employee.setGender("0");
+        employee.setAge(30);
+        boolean result = employee.insert();
+        System.out.println("result: " + result);
+    }
+    
     /**
      * 条件构造器 删除操作
      */
