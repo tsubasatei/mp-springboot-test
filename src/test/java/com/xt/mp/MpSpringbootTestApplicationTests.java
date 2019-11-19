@@ -27,6 +27,21 @@ class MpSpringbootTestApplicationTests {
     private UserMapper userMapper;
 
     /**
+     * 测试公共字段填充
+     */
+    @Test
+    public void testMetaObjectHandler() {
+        User user = new User();
+//        user.setUsername("Tom");
+
+//        user.setId(5);
+        user.setLogicFlag(1);
+
+        userMapper.insert(user);
+//        userMapper.updateById(user);
+    }
+
+    /**
      * 测试逻辑删除
      */
     @Test
