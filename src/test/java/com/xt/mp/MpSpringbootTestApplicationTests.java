@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xt.mp.bean.Employee;
+import com.xt.mp.bean.User;
 import com.xt.mp.mapper.EmployeeMapper;
+import com.xt.mp.mapper.UserMapper;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,22 @@ class MpSpringbootTestApplicationTests {
 
     @Autowired
     private EmployeeMapper employeeMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    /**
+     * 测试逻辑删除
+     */
+    @Test
+    public void testLogicDelete() {
+
+        Integer result = userMapper.deleteById(3);
+        System.out.println("result:" +result );
+
+        User user = userMapper.selectById(3);
+        System.out.println(user);
+    }
 
     /**
      * 乐观锁
