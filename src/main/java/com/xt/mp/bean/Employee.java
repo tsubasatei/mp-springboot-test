@@ -2,6 +2,7 @@ package com.xt.mp.bean;
 
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.Version;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
@@ -15,4 +16,8 @@ public class Employee extends Model<Employee> {
 
     @TableField(exist = false)
     private Double salary;
+
+    // 注解实体字段 @Version 必须要
+    @Version
+    private Integer version;
 }

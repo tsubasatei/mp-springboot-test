@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xt.mp.bean.Employee;
 import com.xt.mp.mapper.EmployeeMapper;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,92 @@ class MpSpringbootTestApplicationTests {
     @Autowired
     private EmployeeMapper employeeMapper;
 
+    /**
+     * 乐观锁
+     */
+    @Test
+    public void testUpdateByIdSucc() {
+        Employee emp = new Employee();
+        emp.setAge(18);
+        emp.setEmail("test@baomidou.com");
+        emp.setLastName("optlocker");
+        emp.setVersion(1);
+        employeeMapper.insert(emp);
+        Integer id = emp.getId();
+
+        Employee empUpdate = new Employee();
+        empUpdate.setId(id);
+        empUpdate.setAge(19);
+        empUpdate.setVersion(1);
+        Assert.assertEquals("Should update success", 1, employeeMapper.updateById(empUpdate));
+        Assert.assertEquals("Should version = version+1", 2, empUpdate.getVersion().intValue());
+    }
+
+    @Test
+    public void testUpdateByIdFail() {
+        Employee emp = new Employee();
+        emp.setAge(18);
+        emp.setEmail("test@baomidou.com");
+        emp.setLastName("optlocker");
+        emp.setVersion(1);
+        employeeMapper.insert(emp);
+        Integer id = emp.getId();
+
+        Employee empUpdate = new Employee();
+        empUpdate.setId(id);
+        empUpdate.setAge(19);
+        empUpdate.setVersion(0);
+        Assert.assertEquals("Should update failed due to incorrect version(actually 1, but 0 passed in)", 0, employeeMapper.updateById(empUpdate));
+    }
+
+    @Test
+    public void testUpdateByIdSuccWithNoVersion() {
+        Employee emp = new Employee();
+        emp.setAge(18);
+        emp.setEmail("test@baomidou.com");
+        emp.setLastName("optlocker");
+        emp.setVersion(1);
+        employeeMapper.insert(emp);
+        Integer id = emp.getId();
+
+        Employee empUpdate = new Employee();
+        empUpdate.setId(id);
+        empUpdate.setAge(19);
+        empUpdate.setVersion(null);
+        Assert.assertEquals("Should update success as no version passed in", 1, employeeMapper.updateById(empUpdate));
+        Employee updated = employeeMapper.selectById(id);
+        Assert.assertEquals("Version not changed", 1, updated.getVersion().intValue());
+        Assert.assertEquals("Age updated", 19, updated.getAge().intValue());
+    }
+
+    /**
+     * 批量更新带乐观锁
+     * <p>
+     * update(et,ew) et:必须带上version的值才会触发乐观锁
+     */
+    @Test
+    public void testUpdateByEntitySucc() {
+        QueryWrapper<Employee> ew = new QueryWrapper<>();
+        ew.eq("version", 1);
+        int count = employeeMapper.selectCount(ew);
+
+        Employee entity = new Employee();
+        entity.setAge(28);
+        entity.setVersion(1);
+
+        Assert.assertEquals("updated records should be same", count, employeeMapper.update(entity, null));
+        ew = new QueryWrapper<>();
+        ew.eq("version", 1);
+        Assert.assertEquals("No records found with version=1", 0, employeeMapper.selectCount(ew).intValue());
+        ew = new QueryWrapper<>();
+        ew.eq("version", 2);
+        Assert.assertEquals("All records with version=1 should be updated to version=2", count, employeeMapper.selectCount(ew).intValue());
+    }
+    
+    @Test
+    public void testSqlExplain () {
+        employeeMapper.delete(null); // 全表删除
+    }
 
     /**
      * AR  分页复杂操作
