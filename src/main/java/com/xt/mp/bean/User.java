@@ -4,7 +4,9 @@ package com.xt.mp.bean;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import lombok.Data;
 
+@Data
 public class User {
     private Integer id;
 
@@ -15,36 +17,4 @@ public class User {
     @TableLogic
     private Integer logicFlag;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", logicFlag=" + logicFlag +
-                '}';
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Integer getLogicFlag() {
-        return logicFlag;
-    }
-
-    public void setLogicFlag(Integer logicFlag) {
-        this.logicFlag = logicFlag;
-    }
 }

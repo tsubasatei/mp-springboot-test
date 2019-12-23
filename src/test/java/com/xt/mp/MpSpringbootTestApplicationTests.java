@@ -143,6 +143,14 @@ class MpSpringbootTestApplicationTests {
 
     /**
      * AR  分页复杂操作
+     *
+     * 总页数：1
+     * 总记录数：2
+     * 当前页：1
+     * 当前页的记录数2
+     * true
+     * true
+     *
      */
     @Test
     public void  testARPage() {
@@ -150,6 +158,12 @@ class MpSpringbootTestApplicationTests {
         IPage<Employee> employeeIPage = employee.selectPage(new Page<>(1, 2),
                 new QueryWrapper<Employee>().like("last_name", "e"));
         employeeIPage.getRecords().forEach(System.out::println);
+        System.out.println("总页数：" + employeeIPage.getPages());
+        System.out.println("总记录数：" + employeeIPage.getTotal());
+        System.out.println("当前页：" + employeeIPage.getCurrent());
+        System.out.println("当前页的记录数" + employeeIPage.getSize());
+        System.out.println(employeeIPage.isSearchCount());
+        System.out.println(employeeIPage.optimizeCountSql());
     }
 
     /**

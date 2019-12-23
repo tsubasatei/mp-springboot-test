@@ -12,11 +12,10 @@
     <artifactId>mp-springboot-test</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>mp-springboot-test</name>
-    <description>Demo project for Spring Boot</description>
+    <description>mybatis-plus-springboot</description>
 
     <properties>
         <java.version>1.8</java.version>
-        <mysql.version>8.0.15</mysql.version>
         <mp.version>3.2.0</mp.version>
         <velocity.version>2.0</velocity.version>
         <p6spy.version>3.8.6</p6spy.version>
@@ -47,12 +46,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.junit.vintage</groupId>-->
-                    <!--<artifactId>junit-vintage-engine</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -60,6 +53,7 @@
             <version>${mysql.version}</version>
         </dependency>
 
+        <!-- mybatis-plus-boot-starter -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>

@@ -36,7 +36,7 @@ public class MybatisPlusConfig {
     public SqlExplainInterceptor sqlExplainInterceptor() {
         SqlExplainInterceptor sqlExplainInterceptor = new SqlExplainInterceptor();
         List<ISqlParser> sqlParserList = new ArrayList<>();
-        sqlParserList.add(new BlockAttackSqlParser());
+        sqlParserList.add(new BlockAttackSqlParser());  // 禁止全表删除和修改
         sqlExplainInterceptor.setSqlParserList(sqlParserList);
         return sqlExplainInterceptor;
     }
